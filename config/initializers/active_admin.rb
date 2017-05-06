@@ -54,8 +54,13 @@ ActiveAdmin.setup do |config|
   #
   # This setting changes the method which Active Admin calls
   # within the application controller.
-  config.authentication_method = :authenticate_admin_user!
-
+  config.authentication_method = Proc.new do |namespace|
+    if namespace && namespace.is_a?(Array)
+      "authenticate_#{namespace.map(&:to_s).join('_').underscore}_admin_user!".to_sym
+    else
+      :authenticate_admin_user!
+    end
+  end
   # == User Authorization
   #
   # Active Admin will automatically call an authorization
@@ -86,7 +91,13 @@ ActiveAdmin.setup do |config|
   #
   # This setting changes the method which Active Admin calls
   # (within the application controller) to return the currently logged in user.
-  config.current_user_method = :current_admin_user
+  config.current_user_method = Proc.new do |namespace|
+    if namespace && namespace.is_a?(Array)
+      "current_#{namespace.map(&:to_s).join('_').underscore}_admin_user".to_sym
+    else
+      :current_admin_user
+    end
+  end
 
   # == Logging Out
   #
@@ -98,7 +109,13 @@ ActiveAdmin.setup do |config|
   # will call the method to return the path.
   #
   # Default:
-  config.logout_link_path = :destroy_admin_user_session_path
+  config.logout_link_path = Proc.new do |namespace|
+    if namespace && namespace.is_a?(Array)
+      "destroy_#{namespace.map(&:to_s).join('_').underscore}_admin_user_session_path".to_sym
+    else
+      :destroy_admin_user_session_path
+    end
+  end
 
   # This setting changes the http method used when rendering the
   # link. For example :get, :delete, :put, etc..
@@ -119,7 +136,7 @@ ActiveAdmin.setup do |config|
   # This allows your users to comment on any resource registered with Active Admin.
   #
   # You can completely disable comments:
-  config.comments = false
+  # config.comments = false
   #
   # You can change the name under which comments are registered:
   # config.comments_registration_name = 'AdminComment'

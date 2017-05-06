@@ -1,6 +1,5 @@
-GIT
-  remote: https://github.com/siutin/activeadmin.git
-  revision: 39996763766d726056c4b07f1dc8a55a8a8df01f
+PATH
+  remote: ../activeadmin
   specs:
     activeadmin (1.0.0)
       arbre (>= 1.1.1)
